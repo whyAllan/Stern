@@ -75,4 +75,4 @@ Plugins/**/Intermediate/*
 DerivedDataCache/*
 
 # Content folder (large binary assets, tracked outside git)
-Content/
+Content/*
