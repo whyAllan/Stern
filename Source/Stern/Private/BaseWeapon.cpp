@@ -18,25 +18,30 @@ void ABaseWeapon::Use()
 	if (World != nullptr )
 	{
 		FHitResult Hit;
-		FRotator SpawnRotation = ToolMeshComponent->GetSocketRotation("Muzzle");
 
-		FVector LineStart = ToolMeshComponent->GetSocketLocation("Muzzle");
+		FTransform SocketTransform = ToolMeshComponent->GetSocketTransform("Muzzle");
+		FVector LineStart = SocketTransform.GetLocation();
+		FVector ForwardVector = SocketTransform.GetRotation().GetForwardVector();
+		FVector LineEnd = LineStart + (ForwardVector * 3000.0f);
 
-		FVector LineEnd = LineStart + (OwningCharacter->GetFollowCamera()->GetForwardVector() * 3000);
+		World->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECC_Visibility);
 
-		bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECC_Visibility);
+		FRotator BaseRotator = FRotator(0.f, 0.f, 90.0f);
 
 		if (TracerSystem)
 		{
 			UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(
 				TracerSystem,
 				ToolMeshComponent,
-				FName("Muzzle"),
-				FVector::ZeroVector,
-				FRotator::ZeroRotator,
-				EAttachLocation::SnapToTarget,
-				true,   // auto destroy
-				false
+				NAME_None,
+				LineStart,
+				BaseRotator,
+				FVector::OneVector,
+				EAttachLocation::KeepWorldPosition,
+				true,
+				ENCPoolMethod::None,
+				false,   // bAutoActivate = false — set params first
+				true
 			);
 
 			if (!NiagaraComp)
@@ -45,16 +50,13 @@ void ABaseWeapon::Use()
 			}
 
 			FVector TargetPosition = Hit.bBlockingHit ? Hit.ImpactPoint : Hit.TraceEnd;
-			// Vector user param (MuzzlePosition)
-			NiagaraComp->SetVariableVec3(FName("MuzzlePosition"), LineStart);
 
-			// Bool user param (Trigger)
-			NiagaraComp->SetVariableBool(FName("Trigger"), true);
+			NiagaraComp->SetVariableVec3(FName("User.MuzzlePosition"), LineStart);
+			NiagaraComp->SetVariableBool(FName("User.Trigger"), true);
 
-			// Data Interface Array Float3 (ImpactPosition) - separate function library
 			UNiagaraDataInterfaceArrayFunctionLibrary::SetNiagaraArrayVector(
 				NiagaraComp,
-				FName("ImpactPosition"),
+				FName("User.ImpactPositions"),
 				TArray<FVector>{ TargetPosition }
 			);
 

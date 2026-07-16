@@ -100,9 +100,10 @@ void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Look);
 
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Aim);
+
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Shoot);
-
-
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &AThirdPersonCharacter::Shoot);
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Canceled, this, &AThirdPersonCharacter::Shoot);
 	}
 
 
@@ -128,8 +129,25 @@ void AThirdPersonCharacter::Aim(const FInputActionValue& Value)
 void AThirdPersonCharacter::Shoot(const FInputActionValue& Value)
 {
 	bool bIsShooting = Value.Get<bool>();
+	
+	if (EquippedTool != nullptr)
+	{
 
-	DoShoot(bIsShooting);
+		if (bIsShooting)
+		{
+			if (!GetWorldTimerManager().IsTimerActive(ShootLoopHandle))
+			{
+				DoShoot();
+				GetWorldTimerManager().SetTimer(ShootLoopHandle, this, &AThirdPersonCharacter::DoShoot, 0.2f, true);
+			}
+		}
+		else
+		{
+			GetWorldTimerManager().ClearTimer(ShootLoopHandle);
+		}
+	}
+
+
 }
 
 void AThirdPersonCharacter::Interact(const FInputActionValue& Value)
@@ -195,7 +213,7 @@ void AThirdPersonCharacter::DoAim(bool bIsAiming)
 {
 }
 
-void AThirdPersonCharacter::DoShoot(bool bIsShooting)
+void AThirdPersonCharacter::DoShoot()
 {
 	if (EquippedTool != nullptr)
 	{

@@ -87,7 +87,7 @@ public:
 	virtual void DoAim(bool bIsAiming);
 
 	UFUNCTION(Category = "Input")
-	virtual void DoShoot(bool bIsShooting);
+	virtual void DoShoot();
 
 	UFUNCTION(Category = "Input")
 	virtual void DoInteract(bool bIsInteracting);
@@ -111,6 +111,7 @@ protected:
 	void Shoot(const FInputActionValue& Value);//** Shoot Input */
 	void Interact(const FInputActionValue& Value);//** Interact Input */
 
+	FTimerHandle ShootLoopHandle;
 
 public:
 	// Sets default values for this character's properties
