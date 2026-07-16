@@ -9,31 +9,41 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
-class UInputMappingContext;
 struct FInputActionValue;
+class UInputMappingContext;
 
+class UItemDefinition;
+class AEquippableToolBase;
+class UEquippableToolDefinition;
+class UInventoryComponent;
 
-UCLASS(abstract)
+UCLASS(Abstract)
 class STERN_API AThirdPersonCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	UAnimBlueprint* AnimInstance;
+
+	UPROPERTY(VIsibleAnywhere, Category = "Inventory")
+	TObjectPtr<UInventoryComponent> InventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
+	TObjectPtr<AEquippableToolBase> EquippedTool;
 
 
 protected:
 
-	UPROPERTY(EditAnywhere, Category = "Input")
-	TSoftObjectPtr<UInputMappingContext> InputMapping;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputMappingContext> ThirdPersonContext;
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* JumpAction;
@@ -60,48 +70,52 @@ protected:
 	UInputAction* InteractAction;
 
 
-protected:
-
-	/** Called for movement input */
-	void Move(const FInputActionValue& Value);
-
-	/** Called for looking input */
-	void Look(const FInputActionValue& Value);
-
-	void Aim(const FInputActionValue& Value);
-	void Shoot(const FInputActionValue& Value);
-	void Interact(const FInputActionValue& Value);
-
 public:
-
-	/** Handles move inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category = "Input")
+	UFUNCTION(Category = "Input")
 	virtual void DoMove(float Right, float Forward);
 
-	/** Handles look inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category = "Input")
+	UFUNCTION(Category = "input")
 	virtual void DoLook(float Yaw, float Pitch);
 
-	/** Handles jump pressed inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category = "Input")
+	UFUNCTION(Category = "Input")
 	virtual void DoJumpStart();
 
-	/** Handles jump pressed inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category = "Input")
+	UFUNCTION(Category = "Input")
 	virtual void DoJumpEnd();
 
-	UFUNCTION(BlueprintCallable, Category = "Input")
+	UFUNCTION(Category = "Input")
 	virtual void DoAim(bool bIsAiming);
 
-	UFUNCTION(BlueprintCallable, Category = "Input")
+	UFUNCTION(Category = "Input")
 	virtual void DoShoot(bool bIsShooting);
 
-	UFUNCTION(BlueprintCallable, Category = "Input")
-	virtual void DoInteract(bool bIsInteract);
+	UFUNCTION(Category = "Input")
+	virtual void DoInteract(bool bIsInteracting);
+
+public:
+	UFUNCTION()
+	void GiveItem(UItemDefinition* ItemDefinition);
+
+	UFUNCTION()
+	bool IsToolAlreadyOwned(UEquippableToolDefinition* ToolDefinition);
+
+	UFUNCTION()
+	void AttachTool(UEquippableToolDefinition* ToolDefinition);
+
+
+protected:
+
+	void Move(const FInputActionValue& Value);//** Move Input */
+	void Look(const FInputActionValue& Value);//** Look Input */
+	void Aim(const FInputActionValue& Value);//** Aim Input */
+	void Shoot(const FInputActionValue& Value);//** Shoot Input */
+	void Interact(const FInputActionValue& Value);//** Interact Input */
+
 
 public:
 	// Sets default values for this character's properties
 	AThirdPersonCharacter();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -113,6 +127,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 
 
 public:

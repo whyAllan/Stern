@@ -2,38 +2,37 @@
 
 
 #include "ThirdPersonCharacter.h"
+#include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-#include "InputMappingContext.h"
-#include "Engine/LocalPlayer.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "InventoryComponent.h"
+#include "Data/ItemDefinition.h"
+#include "EquippableToolBase.h"
+#include "EquippableToolDefinition.h"
 
 // Sets default values
 AThirdPersonCharacter::AThirdPersonCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
+	// Set Capsule
+	GetCapsuleComponent()->InitCapsuleSize(42.f, 100.f);
 
-	// Don't rotate when the controller rotates. Let that just affect the camera.
+	// Set Control Rotation
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
-
-	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
-	// instead of recompiling to adjust them
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 300.f, 0.f);
 	GetCharacterMovement()->JumpZVelocity = 500.f;
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
@@ -41,16 +40,21 @@ AThirdPersonCharacter::AThirdPersonCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
-	// Create a camera boom (pulls in towards the player if there is a collision)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+
+	// Configure Camera boom
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraComponent"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f;
+	CameraBoom->TargetArmLength = 400.f;
 	CameraBoom->bUsePawnControlRotation = true;
 
-	// Create a follow camera
+	// Configure Follow Camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	//Inventory
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+
 }
 
 // Called when the game starts or when spawned
@@ -58,21 +62,21 @@ void AThirdPersonCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (APlayerController* PC = Cast<APlayerController>(Controller))
+	check(GEngine != nullptr);
+
+	GetMesh()->SetAnimInstanceClass(AnimInstance->GeneratedClass);
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
-		if (ULocalPlayer* LocalPlayer = PC->GetLocalPlayer())
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			if (UEnhancedInputLocalPlayerSubsystem* InputSystem =
-				LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-			{
-				if (!InputMapping.IsNull())
-				{
-					InputSystem->AddMappingContext(InputMapping.LoadSynchronous(), 0);
-				}
-			}
+			Subsystem->AddMappingContext(ThirdPersonContext, 0);
 		}
 	}
+
+
 }
+
 // Called every frame
 void AThirdPersonCharacter::Tick(float DeltaTime)
 {
@@ -83,34 +87,27 @@ void AThirdPersonCharacter::Tick(float DeltaTime)
 // Called to bind functionality to input
 void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
+
+		// Jumping
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+
+		// Moving
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Move);
+
+		// Looking
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Look);
+
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Aim);
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Shoot);
 
 
-		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-			// Jumping
-			EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-			EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+	}
 
-			// Moving
-			EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Move);
-			EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Look);
 
-			// Looking
-			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Look);
-
-			EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Aim);
-			EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Shoot);
-			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Interact);
-
-			
-		}
-		else
-		{
-		}
 
 }
-
-
 
 void AThirdPersonCharacter::Move(const FInputActionValue& Value)
 {
@@ -139,7 +136,7 @@ void AThirdPersonCharacter::Interact(const FInputActionValue& Value)
 {
 	bool bIsInteracting = Value.Get<bool>();
 
-	DoShoot(bIsInteracting);
+	 DoInteract(bIsInteracting);
 }
 
 
@@ -149,7 +146,7 @@ void AThirdPersonCharacter::Look(const FInputActionValue& Value)
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
 	// route the input
-	DoLook(LookAxisVector.X, LookAxisVector.Y);
+	DoLook( LookAxisVector.X, - LookAxisVector.Y);
 }
 
 void AThirdPersonCharacter::DoMove(float Right, float Forward)
@@ -188,7 +185,6 @@ void AThirdPersonCharacter::DoJumpStart()
 	Jump();
 }
 
-
 void AThirdPersonCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
@@ -196,11 +192,82 @@ void AThirdPersonCharacter::DoJumpEnd()
 }
 
 void AThirdPersonCharacter::DoAim(bool bIsAiming)
-{}
+{
+}
 
 void AThirdPersonCharacter::DoShoot(bool bIsShooting)
-{}
+{
+	if (EquippedTool != nullptr)
+	{
+		EquippedTool->Use();
+	}
+}
 
 
 void AThirdPersonCharacter::DoInteract(bool bIsInteracting)
-{}
+{
+}
+void AThirdPersonCharacter::GiveItem(UItemDefinition* ItemDefinition)
+{
+	
+	switch (ItemDefinition->ItemType)
+	{
+	case EItemType::Tool:
+	{
+		UEquippableToolDefinition* ToolDefinition = Cast<UEquippableToolDefinition>(ItemDefinition);
+
+		if (ToolDefinition != nullptr)
+		{
+			AttachTool(ToolDefinition);
+		}
+		else
+		{
+
+		}
+		break;
+	}
+
+	case EItemType::Consumable:
+	{
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+}
+
+bool AThirdPersonCharacter::IsToolAlreadyOwned(UEquippableToolDefinition* ToolDefinition)
+{
+ for (UEquippableToolDefinition* InventoryItem : InventoryComponent->ToolInventory)
+ {
+	 if (ToolDefinition->ID == InventoryItem->ID)
+	 {
+		 return true;
+	 }
+ }
+ return false;
+}
+
+void AThirdPersonCharacter::AttachTool(UEquippableToolDefinition* ToolDefinition)
+{
+	if(!IsToolAlreadyOwned(ToolDefinition))
+	{
+		AEquippableToolBase* ToolToEquip = GetWorld()->SpawnActor<AEquippableToolBase>(ToolDefinition->ToolAsset, this->GetActorTransform());
+		FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
+
+		ToolToEquip->AttachToActor(this, AttachmentRules);
+		ToolToEquip->AttachToComponent(GetMesh(), AttachmentRules, FName(TEXT("HandGrip_R")));
+
+		GetMesh()->SetAnimInstanceClass(ToolToEquip->ThirdPersonToolAnim->GeneratedClass);
+		
+		//Add to to inventory 
+		InventoryComponent->ToolInventory.Add(ToolDefinition);
+		ToolToEquip->OwningCharacter = this;
+		EquippedTool = ToolToEquip;
+
+	}
+}
+
+

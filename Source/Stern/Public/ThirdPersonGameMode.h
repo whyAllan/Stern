@@ -4,14 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "BaseGameMode.generated.h"
+#include "ThirdPersonGameMode.generated.h"
 
 /**
  * 
  */
-UCLASS()
-class STERN_API ABaseGameMode : public AGameModeBase
+UCLASS(abstract)
+class STERN_API AThirdPersonGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+	/** Constructor */
+	AThirdPersonGameMode();
 	
 };
