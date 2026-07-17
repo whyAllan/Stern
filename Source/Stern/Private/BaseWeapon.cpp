@@ -11,6 +11,30 @@
 #include "Kismet/KismetMathLibrary.h"
 
 
+
+
+ABaseWeapon::ABaseWeapon(){
+
+	MagazineComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MagazineComponent"));
+	check(MagazineComponent != nullptr);
+	MagazineComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	
+	BoltComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BoltComponent"));
+	check(BoltComponent != nullptr);
+	BoltComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
+	SilencerComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SilencerComponent"));
+	check(SilencerComponent != nullptr);
+	SilencerComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	SilencerComponent->SetVisibility(false); 
+	SilencerComponent->SetComponentTickEnabled(false);
+
+	MagazineComponent->SetupAttachment(ToolMeshComponent);
+	BoltComponent->SetupAttachment(ToolMeshComponent);
+	SilencerComponent->SetupAttachment(ToolMeshComponent);
+}
+
+
 // Shoot
 void ABaseWeapon::Use()
 {
@@ -25,45 +49,7 @@ void ABaseWeapon::Use()
 		FVector LineEnd = LineStart + (ForwardVector * 3000.0f);
 
 		World->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECC_Visibility);
-
-		FRotator BaseRotator = FRotator(0.f, 0.f, 90.0f);
-
-		if (TracerSystem)
-		{
-			UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(
-				TracerSystem,
-				ToolMeshComponent,
-				NAME_None,
-				LineStart,
-				BaseRotator,
-				FVector::OneVector,
-				EAttachLocation::KeepWorldPosition,
-				true,
-				ENCPoolMethod::None,
-				false,   // bAutoActivate = false — set params first
-				true
-			);
-
-			if (!NiagaraComp)
-			{
-				return;
-			}
-
-			FVector TargetPosition = Hit.bBlockingHit ? Hit.ImpactPoint : Hit.TraceEnd;
-
-			NiagaraComp->SetVariableVec3(FName("User.MuzzlePosition"), LineStart);
-			NiagaraComp->SetVariableBool(FName("User.Trigger"), true);
-
-			UNiagaraDataInterfaceArrayFunctionLibrary::SetNiagaraArrayVector(
-				NiagaraComp,
-				FName("User.ImpactPositions"),
-				TArray<FVector>{ TargetPosition }
-			);
-
-			NiagaraComp->Activate();
-
-
-		}
+		
 	}
 }
 
@@ -77,5 +63,17 @@ void ABaseWeapon::BindInputAction(const UInputAction* InputToBind)
 		{
 			EnhancedInputComponent->BindAction(InputToBind, ETriggerEvent::Triggered, this, &ABaseWeapon::Use);
 		}
+	}
+}
+
+
+void ABaseWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	if (HasSilencer)
+	{
+		SilencerComponent->SetVisibility(true);
+		SilencerComponent->SetComponentTickEnabled(true);
 	}
 }

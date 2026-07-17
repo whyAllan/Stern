@@ -13,6 +13,7 @@ AEquippableToolBase::AEquippableToolBase()
 
 	ToolMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ToolMesh"));
 	check(ToolMeshComponent != nullptr);
+	SetRootComponent(ToolMeshComponent);
 }
 
 // Called when the game starts or when spawned

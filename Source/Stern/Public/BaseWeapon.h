@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EquippableToolBase.h"
+#include "Components/StaticMeshComponent.h"
 #include "BaseWeapon.generated.h"
 
 
@@ -22,7 +23,20 @@ public:
 
 	virtual void BindInputAction(const UInputAction* InputToBind) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Effects")
-	UNiagaraSystem* TracerSystem;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Components")
+	UStaticMeshComponent* MagazineComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Component")
+	UStaticMeshComponent* BoltComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Variables")
+	bool HasSilencer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Variables")
+	UStaticMeshComponent* SilencerComponent;
+
+public:
+	ABaseWeapon();
+protected:
+	virtual void BeginPlay() override;
 };
