@@ -12,6 +12,8 @@
  * 
  */
 class UNiagaraSystem;
+class UNiagaraComponent;
+
 UCLASS()
 class STERN_API ABaseWeapon : public AEquippableToolBase
 {
@@ -22,6 +24,12 @@ public:
 	virtual void Use() override;
 
 	virtual void BindInputAction(const UInputAction* InputToBind) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Effects")
+	UNiagaraSystem* MuzzleFlashSystem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapo | Effects")
+	UNiagaraComponent* MuzzleFlashComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Components")
 	UStaticMeshComponent* MagazineComponent;

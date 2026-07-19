@@ -41,6 +41,11 @@ void ABaseWeapon::Use()
 	UWorld* const World = GetWorld();
 	if (World != nullptr )
 	{
+
+		if (MuzzleFlashComponent)
+		{
+			MuzzleFlashComponent->Activate(true);
+		}
 		FHitResult Hit;
 
 		FTransform SocketTransform = ToolMeshComponent->GetSocketTransform("Muzzle");
@@ -75,5 +80,17 @@ void ABaseWeapon::BeginPlay()
 	{
 		SilencerComponent->SetVisibility(true);
 		SilencerComponent->SetComponentTickEnabled(true);
+	}
+
+	MuzzleFlashComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+		MuzzleFlashSystem, ToolMeshComponent, TEXT("Muzzle"),
+		FVector::ZeroVector, FRotator::ZeroRotator,
+		EAttachLocation::SnapToTarget,
+		false
+	);
+
+	if (MuzzleFlashComponent)
+	{
+		MuzzleFlashComponent->Deactivate();
 	}
 }
