@@ -28,7 +28,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Effects")
 	UNiagaraSystem* MuzzleFlashSystem;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapo | Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Effects")
 	UNiagaraComponent* MuzzleFlashComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Components")

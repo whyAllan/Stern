@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Animation/BlendSpace.h"
 #include "UnarmedAnimInstance.generated.h"
+
 
 class AThirdPersonCharacter;
 class UCharacterMovementComponent;
@@ -20,7 +22,12 @@ class STERN_API UUnarmedAnimInstance : public UAnimInstance
 public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-	
+
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	TObjectPtr<UBlendSpace> ToolBlendSpace;
+
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")

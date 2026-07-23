@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EnhancedInputSubsystems.h"
-#include "Animation/AnimBlueprint.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Animation/BlendSpace.h"
 #include "EquippableToolBase.generated.h"
 
 class AThirdPersonCharacter;
@@ -23,7 +23,7 @@ public:
 	AEquippableToolBase();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UAnimBlueprint> ThirdPersonToolAnim;
+	TObjectPtr<UBlendSpace> ToolBlendSpace;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<USkeletalMeshComponent> ToolMeshComponent;
