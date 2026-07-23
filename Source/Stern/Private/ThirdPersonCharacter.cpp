@@ -13,6 +13,7 @@
 #include "InputActionValue.h"
 #include "InventoryComponent.h"
 #include "Data/ItemDefinition.h"
+#include "Anim/BaseAnimInstance.h" 
 #include "EquippableToolBase.h"
 #include "EquippableToolDefinition.h"
 
@@ -278,7 +279,10 @@ void AThirdPersonCharacter::AttachTool(UEquippableToolDefinition* ToolDefinition
 		ToolToEquip->AttachToActor(this, AttachmentRules);
 		ToolToEquip->AttachToComponent(GetMesh(), AttachmentRules, FName(TEXT("HandGrip_R")));
 
-		GetMesh()->SetAnimInstanceClass(ToolToEquip->ThirdPersonToolAnim->GeneratedClass);
+		if (UBaseAnimInstance* SternAnim = Cast<UBaseAnimInstance>(GetMesh()->GetAnimInstance()))
+		{
+			SternAnim->UpdateToolBlendSpace(ToolToEquip->ToolBlendSpace);
+		}
 		
 		//Add to to inventory 
 		InventoryComponent->ToolInventory.Add(ToolDefinition);

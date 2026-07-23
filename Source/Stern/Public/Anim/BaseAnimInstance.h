@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/BlendSpace.h"
-#include "UnarmedAnimInstance.generated.h"
+#include "BaseAnimInstance.generated.h"
 
 
 class AThirdPersonCharacter;
@@ -15,7 +15,7 @@ class UCharacterMovementComponent;
  * 
  */
 UCLASS()
-class STERN_API UUnarmedAnimInstance : public UAnimInstance
+class STERN_API UBaseAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 
@@ -63,4 +63,9 @@ private:
 	TObjectPtr<AThirdPersonCharacter> OwnerCharacter;
 	UPROPERTY()
 	TObjectPtr<UCharacterMovementComponent> MovementComponent;
+
+public:
+
+	UFUNCTION()
+	void UpdateToolBlendSpace(UBlendSpace* TargetBlendSpace);
 };
