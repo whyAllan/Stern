@@ -23,7 +23,8 @@ class STERN_API AThirdPersonCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-
+	
+	//Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 
@@ -38,6 +39,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
 	TObjectPtr<AEquippableToolBase> EquippedTool;
+
+	
+	// Variables
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Variables")
+	bool IsInCombat;
 
 
 protected:
@@ -110,6 +116,9 @@ protected:
 	void Aim(const FInputActionValue& Value);//** Aim Input */
 	void Shoot(const FInputActionValue& Value);//** Shoot Input */
 	void Interact(const FInputActionValue& Value);//** Interact Input */
+	
+	//helpers
+	void ActivateCombatMode();
 
 	FTimerHandle ShootLoopHandle;
 

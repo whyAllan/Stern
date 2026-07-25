@@ -45,7 +45,7 @@ AThirdPersonCharacter::AThirdPersonCharacter()
 	// Configure Camera boom
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraComponent"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.f;
+	CameraBoom->TargetArmLength = 140.f;
 	CameraBoom->bUsePawnControlRotation = true;
 
 	// Configure Follow Camera
@@ -82,6 +82,7 @@ void AThirdPersonCharacter::BeginPlay()
 void AThirdPersonCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 
 }
 
@@ -291,5 +292,6 @@ void AThirdPersonCharacter::AttachTool(UEquippableToolDefinition* ToolDefinition
 
 	}
 }
+
 
 
