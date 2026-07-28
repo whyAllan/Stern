@@ -45,6 +45,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Variables")
 	bool IsInCombat;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Variables")
+	float UserInputRightVector;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Variables")
+	float USerInputForwardVector;
+
 
 protected:
 

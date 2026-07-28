@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/BlendSpace.h"
+#include "Animation/AnimSequence.h"
 #include "BaseAnimInstance.generated.h"
 
 
@@ -27,6 +28,13 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	TObjectPtr<UBlendSpace> ToolBlendSpace;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	TObjectPtr<UAnimSequence> IdleAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	TObjectPtr<UAnimSequence> AimAnim;
+
 
 protected:
 
@@ -54,8 +62,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	bool bIsCrouching;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	UPROPERTY(BlueprintReadOnly, Category = "Variable")
 	bool bShouldMove;
+
+	UPROPERTY(BLueprintReadOnly, Category = "Variable")
+	bool IsOneEightyTurn;
 
 private:
 

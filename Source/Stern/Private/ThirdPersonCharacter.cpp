@@ -2,6 +2,7 @@
 
 
 #include "ThirdPersonCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -183,9 +184,26 @@ void AThirdPersonCharacter::DoMove(float Right, float Forward)
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
+
+
+		if (abs(Right) > 0)
+		{
+			if (abs(Right - UserInputRightVector) == 1)
+			{
+				GEngine->AddOnScreenDebugMessage(
+					-1,                // Key (-1 means add a new message)
+					5.0f,              // Duration in seconds
+					FColor::Green,     // Text color
+					FString::Printf(TEXT("Right: %f"), Right)
+				);
+			}
+		}
+
 		// add movement 
 		AddMovementInput(ForwardDirection, Forward);
 		AddMovementInput(RightDirection, Right);
+
+		UserInputRightVector = Right;
 	}
 }
 
