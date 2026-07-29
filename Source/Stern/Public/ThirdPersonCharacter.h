@@ -10,7 +10,6 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
 struct FInputActionValue;
-class UInputMappingContext;
 
 class UItemDefinition;
 class AEquippableToolBase;
@@ -44,14 +43,10 @@ public:
 	// Variables
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Variables")
 	bool IsInCombat;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Variables")
-	float UserInputRightVector;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Variables")
-	float USerInputForwardVector;
-
-
+	
+	//Player Config
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "  Control")
+	float MouseSencebility;
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
@@ -86,7 +81,7 @@ public:
 	UFUNCTION(Category = "Input")
 	virtual void DoMove(float Right, float Forward);
 
-	UFUNCTION(Category = "input")
+	UFUNCTION(BlueprintCallable, Category = "input")
 	virtual void DoLook(float Yaw, float Pitch);
 
 	UFUNCTION(Category = "Input")

@@ -18,6 +18,7 @@
 #include "EquippableToolBase.h"
 #include "EquippableToolDefinition.h"
 
+
 // Sets default values
 AThirdPersonCharacter::AThirdPersonCharacter()
 {
@@ -48,6 +49,8 @@ AThirdPersonCharacter::AThirdPersonCharacter()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 140.f;
 	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->bEnableCameraLag = false;
+	CameraBoom->bEnableCameraRotationLag = false;
 
 	// Configure Follow Camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -57,6 +60,9 @@ AThirdPersonCharacter::AThirdPersonCharacter()
 	//Inventory
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 
+	//Player Config
+	MouseSencebility = 1;
+
 }
 
 // Called when the game starts or when spawned
@@ -65,16 +71,6 @@ void AThirdPersonCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	check(GEngine != nullptr);
-
-	GetMesh()->SetAnimInstanceClass(AnimInstance->GeneratedClass);
-
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(ThirdPersonContext, 0);
-		}
-	}
 
 
 }
@@ -101,6 +97,8 @@ void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Look);
+		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Look);
+
 
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Triggered, this, &AThirdPersonCharacter::Aim);
 
@@ -167,7 +165,7 @@ void AThirdPersonCharacter::Look(const FInputActionValue& Value)
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
 	// route the input
-	DoLook( LookAxisVector.X, - LookAxisVector.Y);
+	DoLook( LookAxisVector.X * MouseSencebility, LookAxisVector.Y * MouseSencebility);
 }
 
 void AThirdPersonCharacter::DoMove(float Right, float Forward)
@@ -184,26 +182,30 @@ void AThirdPersonCharacter::DoMove(float Right, float Forward)
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-
-
-		if (abs(Right) > 0)
-		{
-			if (abs(Right - UserInputRightVector) == 1)
-			{
-				GEngine->AddOnScreenDebugMessage(
-					-1,                // Key (-1 means add a new message)
-					5.0f,              // Duration in seconds
-					FColor::Green,     // Text color
-					FString::Printf(TEXT("Right: %f"), Right)
-				);
-			}
-		}
-
 		// add movement 
 		AddMovementInput(ForwardDirection, Forward);
 		AddMovementInput(RightDirection, Right);
 
-		UserInputRightVector = Right;
+		FVector Velocity = GetCharacterMovement()->Velocity;
+		FVector VelocityDir = Velocity.GetSafeNormal();
+
+		float ForwardDot = FVector::DotProduct(VelocityDir, ForwardDirection);
+		float RightDot = FVector::DotProduct(VelocityDir, RightDirection);
+
+		GEngine->AddOnScreenDebugMessage(
+			-1,                // Key (-1 means add a new message)
+			5.0f,              // Duration in seconds
+			FColor::Green,     // Text color
+			FString::Printf(TEXT("%f"),
+				ForwardDot)
+		);
+
+		GEngine->AddOnScreenDebugMessage(
+			-1,                // Key (-1 means add a new message)
+			5.0f,              // Duration in seconds
+			FColor::Red,     // Text color
+			FString::Printf(TEXT("%f"), RightDot)
+		);
 	}
 }
 

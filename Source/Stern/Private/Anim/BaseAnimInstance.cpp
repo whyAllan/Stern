@@ -33,7 +33,6 @@ void UBaseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	FRotator ActorRotation = OwnerCharacter->GetActorRotation();
 	Direction = UKismetMathLibrary::NormalizedDeltaRotator(Velocity.Rotation(), ActorRotation).Yaw;
 
-
 	// Aim
 	FRotator ControlRotation = OwnerCharacter->GetControlRotation();
 	AimPitch = FMath::ClampAngle(
