@@ -31,8 +31,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<AThirdPersonCharacter> OwningCharacter;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UInputMappingContext> ToolMappingContext;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	USceneComponent* LeftHandTransformComponent;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bNeedBothHands;
 
 	UFUNCTION()
 	virtual void Use();

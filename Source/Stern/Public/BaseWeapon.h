@@ -13,6 +13,7 @@
  */
 class UNiagaraSystem;
 class UNiagaraComponent;
+class USceneComponent;
 
 UCLASS()
 class STERN_API ABaseWeapon : public AEquippableToolBase
@@ -25,23 +26,24 @@ public:
 
 	virtual void BindInputAction(const UInputAction* InputToBind) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
 	UNiagaraSystem* MuzzleFlashSystem;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components | Effects")
 	UNiagaraComponent* MuzzleFlashComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Components")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* MagazineComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Component")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* BoltComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Variables")
 	bool HasSilencer;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Variables")
 	UStaticMeshComponent* SilencerComponent;
+
 
 public:
 	ABaseWeapon();

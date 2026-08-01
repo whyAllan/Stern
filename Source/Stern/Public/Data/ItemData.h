@@ -34,6 +34,8 @@ struct FItemData : public FTableRowBase
 {
 	GENERATED_BODY()
 
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Data")
 	FName ID;
 

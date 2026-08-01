@@ -3,7 +3,9 @@
 
 #include "Anim/BaseAnimInstance.h"
 #include "ThirdPersonCharacter.h"
+#include "EquippableToolBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/SkinnedMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -43,6 +45,34 @@ void UBaseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	// On Air?
 	bIsFalling = MovementComponent->IsFalling();
 
+	//Has Tool?
+	EquippedTool = OwnerCharacter->GetEquippedTool();
+	
+	if (EquippedTool)
+	{
+		if (EquippedTool->bNeedBothHands)
+		{
+			LeftHandAlpha = 1;
+
+
+			FTransform WorldLeftHandSceneTransform = EquippedTool->LeftHandTransformComponent->GetComponentTransform();
+			FVector BoneSpaceLocation;
+			FRotator BoneSpaceRotation;
+
+			OwnerCharacter->GetMesh()->TransformToBoneSpace(
+				TEXT("hand_r"),
+				WorldLeftHandSceneTransform.GetLocation(),
+				WorldLeftHandSceneTransform.Rotator(),
+				BoneSpaceLocation,
+				BoneSpaceRotation
+			);
+
+			LeftHandTransform = FTransform(BoneSpaceRotation, BoneSpaceLocation, WorldLeftHandSceneTransform.GetScale3D());
+		}
+		else {
+			LeftHandAlpha = 0;
+		}
+	}
 
 }
 
