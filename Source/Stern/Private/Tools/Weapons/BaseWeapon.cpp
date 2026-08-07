@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BaseWeapon.h"
+#include "Tools/Weapons/BaseWeapon.h"
 #include "EnhancedInputComponent.h"
 #include "ThirdPersonCharacter.h"
 #include "Camera/CameraComponent.h"

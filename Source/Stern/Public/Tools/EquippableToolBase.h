@@ -23,9 +23,6 @@ public:
 	AEquippableToolBase();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UBlendSpace> ToolBlendSpace;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<USkeletalMeshComponent> ToolMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

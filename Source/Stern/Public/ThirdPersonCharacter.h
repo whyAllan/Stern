@@ -30,9 +30,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
-	UPROPERTY(EditAnywhere, Category = "Animation")
-	UAnimBlueprint* AnimInstance;
-
 	UPROPERTY(VIsibleAnywhere, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> InventoryComponent;
 
@@ -48,9 +45,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "  Control")
 	float MouseSencebility;
 protected:
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	TObjectPtr<UInputMappingContext> ThirdPersonContext;
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* JumpAction;

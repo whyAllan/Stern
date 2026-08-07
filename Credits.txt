@@ -1,0 +1,22 @@
+Guns
+
+Rifle:
+Name, Artist, link.
+AK-47, Jeyhun1985, https://sketchfab.com/3d-models/ak-47-kalashnikov-5d08c2e227d04a0f87cd5a005e6b56d1.
+AK-105, SpatialNeglect, https://sketchfab.com/3d-models/ak-105-b250f7cf1e124ab588a7f18b16c79685.
+m4a1, ForevereQ, https://sketchfab.com/3d-models/m4a1-free-dd443d7643094b828f2955c1bde5cf89.
+M4A1 Carbine, 8sianDude, https://sketchfab.com/3d-models/colt-m4a1-carbine-fa4a73faf4234e5db4066335074a7655.
+AR-15, ERI-03, https://sketchfab.com/3d-models/retro-ar-15-ad505ab4229a4dd3b59f3928362c8894.
+AR-15, JaumWF,https://sketchfab.com/3d-models/ar-15-slr-6f06a4c596094f5ea2e7edb7735005c8.
+
+
+Pistol:
+Beretta, romunql, https://sketchfab.com/3d-models/beretta-92-ed616cb85fb14b5181ad9a575af67e10.
+Colt 1911, Hung Do, https://sketchfab.com/3d-models/colt-1911-e9c4fa703b6f4b388d84068c417da642.
+Makarov, valterjherson1 , https://sketchfab.com/3d-models/makarov-pistol-lowpoly-e53424d1a7f1403f84b8ad267880f5b4.
+Glock, TORI106, https://sketchfab.com/3d-models/9mm-pistol-43bc09f5aace4346a8a2b6e1580fc03f.
+
+Ambient:
+destroyed Bus 01, o0ozexo0o, https://sketchfab.com/3d-models/destroyed-bus-01-fdf39ca893a64368af45f82a6b6d68a4.
+RADIO, suspensy, https://sketchfab.com/3d-models/vintage-radio-2a31db1dc84e408eaa8cc7a8164d5034
+ZENITCO "KLESCH-2P + LASER" FLASHLIGHT, suspensy, https://sketchfab.com/3d-models/zenitco-klesch-2p-laser-flashlight-c92e0a1bd8c64ab98d39f4e494045460.

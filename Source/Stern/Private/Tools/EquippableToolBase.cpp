@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "EquippableToolBase.h"
+#include "Tools/EquippableToolBase.h"
 #include "ThirdPersonCharacter.h"
 #include "InputMappingContext.h"
 

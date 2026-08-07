@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "EquippableToolDefinition.h"
+#include "Tools/EquippableToolDefinition.h"
 
 UEquippableToolDefinition* UEquippableToolDefinition::CreateItemCopy(UObject* Outer) const
 {

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EquippableToolBase.h"
+#include "Tools/EquippableToolBase.h"
 #include "Components/StaticMeshComponent.h"
 #include "BaseWeapon.generated.h"
 

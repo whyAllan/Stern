@@ -15,8 +15,8 @@
 #include "InventoryComponent.h"
 #include "Data/ItemDefinition.h"
 #include "Anim/BaseAnimInstance.h" 
-#include "EquippableToolBase.h"
-#include "EquippableToolDefinition.h"
+#include "Tools/EquippableToolBase.h"
+#include "Tools/EquippableToolDefinition.h"
 
 
 // Sets default values
@@ -298,12 +298,7 @@ void AThirdPersonCharacter::AttachTool(UEquippableToolDefinition* ToolDefinition
 		FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 
 		ToolToEquip->AttachToActor(this, AttachmentRules);
-		ToolToEquip->AttachToComponent(GetMesh(), AttachmentRules, FName(TEXT("HandGrip_R")));
-
-		if (UBaseAnimInstance* SternAnim = Cast<UBaseAnimInstance>(GetMesh()->GetAnimInstance()))
-		{
-			SternAnim->UpdateToolBlendSpace(ToolToEquip->ToolBlendSpace);
-		}
+		ToolToEquip->AttachToComponent(GetMesh(), AttachmentRules, FName(TEXT("RifleGrip")));
 		
 		//Add to to inventory 
 		InventoryComponent->ToolInventory.Add(ToolDefinition);

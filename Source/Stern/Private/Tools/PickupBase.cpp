@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PickupBase.h"
+#include "Tools/PickupBase.h"
 #include "Data/ItemDefinition.h"
 #include "Data/ItemData.h" 
 
