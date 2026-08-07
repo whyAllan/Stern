@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Animation/AnimMontage.h"
 #include "ThirdPersonCharacter.generated.h"
 
 class USpringArmComponent;
@@ -30,21 +31,27 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
+
+
 	UPROPERTY(VIsibleAnywhere, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> InventoryComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
 	TObjectPtr<AEquippableToolBase> EquippedTool;
 
-	
 	// Variables
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Variables")
 	bool IsInCombat;
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Variable")
+	bool IsTurning;
+
+
 	//Player Config
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "  Control")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Control")
 	float MouseSencebility;
 protected:
+
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* JumpAction;
@@ -142,4 +149,6 @@ public:
 
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	FORCEINLINE AEquippableToolBase* GetEquippedTool() const { return EquippedTool; }
 };
