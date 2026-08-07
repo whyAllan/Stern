@@ -181,10 +181,31 @@ void AThirdPersonCharacter::DoMove(float Right, float Forward)
 
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		
+
 		// add movement 
 		AddMovementInput(ForwardDirection, Forward);
 		AddMovementInput(RightDirection, Right);
+
+		FVector Velocity = GetCharacterMovement()->Velocity;
+		FVector VelocityDir = Velocity.GetSafeNormal();
+
+		float ForwardDot = FVector::DotProduct(VelocityDir, ForwardDirection);
+		float RightDot = FVector::DotProduct(VelocityDir, RightDirection);
+
+		GEngine->AddOnScreenDebugMessage(
+			-1,                // Key (-1 means add a new message)
+			5.0f,              // Duration in seconds
+			FColor::Green,     // Text color
+			FString::Printf(TEXT("%f"),
+				ForwardDot)
+		);
+
+		GEngine->AddOnScreenDebugMessage(
+			-1,                // Key (-1 means add a new message)
+			5.0f,              // Duration in seconds
+			FColor::Red,     // Text color
+			FString::Printf(TEXT("%f"), RightDot)
+		);
 	}
 }
 

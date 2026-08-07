@@ -10,8 +10,8 @@
 
 
 class AThirdPersonCharacter;
-class AEquippableToolBase;
 class UCharacterMovementComponent;
+
 /**
  * 
  */
@@ -37,9 +37,6 @@ public:
 
 
 protected:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
-	TObjectPtr<AEquippableToolBase> EquippedTool;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
@@ -68,14 +65,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Variable")
 	bool bShouldMove;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Variable")
-	float LeftHandAlpha;
+	UPROPERTY(BLueprintReadOnly, Category = "Variable")
+	bool IsOneEightyTurn;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Variable")
-	FTransform LeftHandTransform;
-
-
-protected:
+private:
 
 	UPROPERTY()
 	TObjectPtr<AThirdPersonCharacter> OwnerCharacter;

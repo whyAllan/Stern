@@ -3,7 +3,6 @@
 
 #include "BaseWeapon.h"
 #include "EnhancedInputComponent.h"
-#include "Components/SceneComponent.h"
 #include "ThirdPersonCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "NiagaraSystem.h"
@@ -15,11 +14,6 @@
 
 
 ABaseWeapon::ABaseWeapon(){
-
-	bNeedBothHands = true;
-
-	LeftHandTransformComponent = CreateDefaultSubobject<USceneComponent>(TEXT("LeftHandTransformComponent"));
-	check(LeftHandTransformComponent != nullptr);
 
 	MagazineComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MagazineComponent"));
 	check(MagazineComponent != nullptr);
@@ -38,7 +32,6 @@ ABaseWeapon::ABaseWeapon(){
 	MagazineComponent->SetupAttachment(ToolMeshComponent);
 	BoltComponent->SetupAttachment(ToolMeshComponent);
 	SilencerComponent->SetupAttachment(ToolMeshComponent);
-	LeftHandTransformComponent->SetupAttachment(ToolMeshComponent);
 }
 
 
